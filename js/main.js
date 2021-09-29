@@ -1,6 +1,6 @@
 function getRandomNumber(min, max) {
   if (min > max || min < 0 || max < 0) {
-    alert('Вы ввели некорректные значения! Попробуйте еще раз.');
+    // alert('Вы ввели некорректные значения! Попробуйте еще раз.');
     return;
   }
 
