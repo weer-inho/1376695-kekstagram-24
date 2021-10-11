@@ -50,4 +50,4 @@ function generatePhoto (firstArgument, ix) {
   };
 }
 
-export {getRandomNumber, getRandomArrayElement, generateComment, getArrayOfComments, generatePhoto}
+export {getRandomNumber, getRandomArrayElement, generateComment, getArrayOfComments, generatePhoto};
