@@ -1,6 +1,5 @@
-import {SIZE} from './data.js';
-import {generatePhoto} from './utils.js';
+import './render.js';
 
-const getArrayOfPhotos = () => Array(SIZE).fill(null).map(generatePhoto);
+// const getArrayOfPhotos = () => Array(SIZE).fill(null).map(generatePhoto);
 
-getArrayOfPhotos();
+// getArrayOfPhotos();

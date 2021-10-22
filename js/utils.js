@@ -1,4 +1,4 @@
-import {NAMES, COMMENTS, DESCRIPTIONS} from './data.js';
+import {NAMES, COMMENTS, DESCRIPTIONS, SIZE} from './data.js';
 
 function getRandomNumber(min, max)  {
   const lower = Math.ceil(Math.min(Math.abs(min), Math.abs(max)));
@@ -7,25 +7,9 @@ function getRandomNumber(min, max)  {
   return Math.floor(result);
 }
 
-// const checkStringLength = (string, maxLength) => {
-//   return string.length <= maxLength;
-// };
-
 function getRandomArrayElement(elements) {
   return elements[_.random(0, elements.length - 1)];
 }
-
-// const shuffleArray = (array) => {
-//   let j;
-//   let temp;
-//   for(let i = array.length - 1; i > 0; i--){
-//     j = Math.floor(Math.random()*(i + 1));
-//     temp = array[j];
-//     array[j] = array[i];
-//     array[i] = temp;
-//   };
-//   return array;
-// };
 
 function generateComment(firstArgument, ix) {
   return {
@@ -43,11 +27,15 @@ function getArrayOfComments (quantity) {
 function generatePhoto (firstArgument, ix) {
   return {
     id: ix+1,
-    url: `photos/{${ix}}.jpg`,
+    url: `photos/${ix+1}.jpg`,
     description: getRandomArrayElement(DESCRIPTIONS),
     likes: getRandomNumber(15, 200),
     comments: getArrayOfComments(getRandomNumber(1,5)),
   };
 }
 
-export {getRandomNumber, getRandomArrayElement, generateComment, getArrayOfComments, generatePhoto};
+function getArrayOfPhotos () {
+  return Array(SIZE).fill(null).map(generatePhoto);
+}
+
+export {getRandomNumber, getRandomArrayElement, generateComment, getArrayOfComments, generatePhoto, getArrayOfPhotos};
