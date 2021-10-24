@@ -14,7 +14,7 @@ function getRandomArrayElement(elements) {
 function generateComment(firstArgument, ix) {
   return {
     id: ix+1,
-    avatar: `img/avatar-${ix}.svg`,
+    avatar: `img/avatar-${ix+1}.svg`,
     message: getRandomArrayElement(COMMENTS),
     name: getRandomArrayElement(NAMES),
   };
@@ -30,7 +30,7 @@ function generatePhoto (firstArgument, ix) {
     url: `photos/${ix+1}.jpg`,
     description: getRandomArrayElement(DESCRIPTIONS),
     likes: getRandomNumber(15, 200),
-    comments: getArrayOfComments(getRandomNumber(1,5)),
+    comments: getArrayOfComments(getRandomNumber(1,6)),
   };
 }
 
