@@ -38,4 +38,8 @@ function getArrayOfPhotos () {
   return Array(SIZE).fill(null).map(generatePhoto);
 }
 
-export {getRandomNumber, getRandomArrayElement, generateComment, getArrayOfComments, generatePhoto, getArrayOfPhotos};
+function isEscapeKey (evt) {
+  return evt.key === 'Escape';
+}
+
+export {getRandomNumber, getRandomArrayElement, generateComment, getArrayOfComments, generatePhoto, getArrayOfPhotos, isEscapeKey};
