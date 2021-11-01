@@ -30,7 +30,7 @@ function generatePhoto (firstArgument, ix) {
     url: `photos/${ix+1}.jpg`,
     description: getRandomArrayElement(DESCRIPTIONS),
     likes: getRandomNumber(15, 200),
-    comments: getArrayOfComments(getRandomNumber(1,6)),
+    comments: getArrayOfComments(getRandomNumber(1,20)),
   };
 }
 
@@ -40,6 +40,7 @@ function getArrayOfPhotos () {
 
 function isEscapeKey (evt) {
   return evt.key === 'Escape';
+  document.removeEventListener('keydown', isEscapeKey);
 }
 
 export {getRandomNumber, getRandomArrayElement, generateComment, getArrayOfComments, generatePhoto, getArrayOfPhotos, isEscapeKey};
