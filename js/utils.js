@@ -40,7 +40,7 @@ function getArrayOfPhotos () {
 
 function isEscapeKey (evt) {
   return evt.key === 'Escape';
-  document.removeEventListener('keydown', isEscapeKey);
+  // document.removeEventListener('keydown', isEscapeKey);
 }
 
 export {getRandomNumber, getRandomArrayElement, generateComment, getArrayOfComments, generatePhoto, getArrayOfPhotos, isEscapeKey};

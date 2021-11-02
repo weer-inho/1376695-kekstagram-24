@@ -1,10 +1,22 @@
 import {photos} from './render.js';
 
+const body = document.querySelector('body');
 const popup = document.querySelector('.big-picture');
 const closeButton = popup.querySelector('.big-picture__cancel');
-const pictures = document.querySelectorAll('a.picture');
-const body = document.querySelector('body');
-let currentCommentCount = 5;
+const pictures = body.querySelectorAll('a.picture');
+const socialComments = popup.querySelector('.social__comments');
+const commentsList = document.createDocumentFragment();
+
+function photoListHandler () {
+  pictures.forEach((picture) => {
+    picture.addEventListener('click', (evt) => {
+      popup.classList.remove('hidden');
+      findChosenPhoto(evt);
+    });
+  });
+}
+
+photoListHandler();
 
 function onEscKeyDown (evt)  {
   if (evt.key === 'Escape' || evt.key === 'Esc') {
@@ -15,12 +27,74 @@ function onEscKeyDown (evt)  {
   }
 }
 
-closeButton.addEventListener('click', () => {
+function closePopupButton () {
   popup.classList.add('hidden');
   body.classList.remove('modal-open');
-});
+  closeButton.removeEventListener('click', closePopupButton);
+}
 
-function photoListHandler (evt) {
+function renderPopup (photo) {
+  document.addEventListener('keydown', onEscKeyDown);
+  closeButton.addEventListener('click', closePopupButton);
+  body.classList.add('modal-open');
+
+  popup.querySelector('.big-picture__img img').src = photo.url;
+  popup.querySelector('.likes-count').textContent = photo.likes;
+  popup.querySelector('.social__caption').textContent = photo.description;
+  popup.querySelector('.comments-count').textContent = photo.comments.length;
+
+  renderCommentSection(photo.comments);
+}
+
+function renderComment (comment) {
+  const commentTemplate = popup.querySelector('.social__comment');
+  const commentElement = commentTemplate.cloneNode(true);
+  commentElement.querySelector('.social__picture').src = comment.avatar;
+  commentElement.querySelector('.social__picture').alt = comment.name;
+  commentElement.querySelector('.social__text').textContent = comment.message;
+  commentsList.appendChild(commentElement);
+}
+
+function renderCommentsArray(array) {
+  array.forEach((element) => renderComment(element));
+}
+
+function renderCommentSection(array) {
+  const socialCommentCount = popup.querySelector('.social__comment-count');
+  const commentsLoader = popup.querySelector('.comments-loader');
+
+  let currentCommentCount = 5;
+  if (array.length > currentCommentCount) {
+    socialCommentCount.classList.remove('hidden');
+    commentsLoader.classList.remove('hidden');
+
+    const currentComments = array.slice(0, currentCommentCount);
+    renderCommentsArray(currentComments);
+
+    commentsLoader.addEventListener('click', () => {
+      const nextCommentCount = 5 + currentCommentCount;
+      const nextComments = array.slice(currentCommentCount, nextCommentCount);
+      currentCommentCount = nextCommentCount;
+      popup.querySelector('.current-comments-count').textContent = currentCommentCount;
+      renderCommentsArray(nextComments);
+      socialComments.appendChild(commentsList);
+
+      if (array.length <= currentCommentCount) {
+        // socialCommentCount.classList.add('hidden');
+        commentsLoader.classList.add('hidden');
+      }
+    });
+  } else {
+    socialCommentCount.classList.add('hidden');
+    commentsLoader.classList.add('hidden');
+    renderCommentsArray(array);
+  }
+
+  socialComments.textContent = '';
+  socialComments.appendChild(commentsList);
+}
+
+function findChosenPhoto (evt) {
   const target = evt.target;
   const isTargetCorrect = target.classList.contains('picture__img');
 
@@ -28,72 +102,7 @@ function photoListHandler (evt) {
     return false;
   }
 
-  document.addEventListener('keydown', onEscKeyDown);
-
-  body.classList.add('modal-open');
-
   const photoId = target.closest('.picture').id;
-
-  // renderPopup(currentPhoto, container)
-
-  const bigPicture = popup.querySelector('.big-picture__img img');
-  bigPicture.src = photos[photoId-1].url;
-
-  const likesCount = popup.querySelector('.likes-count');
-  likesCount.textContent = photos[photoId-1].likes;
-
-  const description = popup.querySelector('.social__caption');
-  description.textContent = photos[photoId-1].description;
-
-  const commentsCount = popup.querySelector('.comments-count');
-  commentsCount.textContent = photos[photoId-1].comments.length;
-
-  const socialCommentCount = popup.querySelector('.social__comment-count');
-  const commentsLoader = popup.querySelector('.comments-loader');
-
-  const commentsList = document.createDocumentFragment();
-  const commentTemplate = popup.querySelector('.social__comment');
-  // const showedComments = photos[photoId-1].comments.slice(page*5, (page*5)+5);
-
-  function renderComment (comment) {
-    const commentElement = commentTemplate.cloneNode(true);
-    commentElement.querySelector('.social__picture').src = comment.avatar;
-    commentElement.querySelector('.social__picture').alt = comment.name;
-    commentElement.querySelector('.social__text').textContent = comment.message;
-    commentsList.appendChild(commentElement);
-  }
-
-  function renderCommentsArray(array) {
-    array.forEach((element) => renderComment(element));
-  }
-
-  if (photos[photoId-1].comments.length > currentCommentCount) {
-    socialCommentCount.classList.remove('hidden');
-    commentsLoader.classList.remove('hidden');
-    const currentComments = photos[photoId-1].comments.slice(0, currentCommentCount);
-    renderCommentsArray(currentComments);
-    commentsLoader.addEventListener('click', () => {
-      // console.log('z')
-      const nextCommentCount = 5 + currentCommentCount;
-      const nextComments = photos[photoId-1].comments.slice(currentCommentCount, nextCommentCount);
-      currentCommentCount = nextCommentCount;
-      renderCommentsArray(nextComments);
-      socialComments.appendChild(commentsList);
-    } )
-  } else {
-    socialCommentCount.classList.add('hidden');
-    commentsLoader.classList.add('hidden');
-    renderCommentsArray(photos[photoId-1].comments)
-  }
-
-  const socialComments = popup.querySelector('.social__comments');
-  socialComments.textContent = '';
-  socialComments.appendChild(commentsList);
+  const currentPhoto = photos[photoId-1];
+  renderPopup(currentPhoto);
 }
-
-pictures.forEach((picture) => {
-  picture.addEventListener('click', (evt) => {
-    popup.classList.remove('hidden');
-    photoListHandler(evt);
-  });
-});
