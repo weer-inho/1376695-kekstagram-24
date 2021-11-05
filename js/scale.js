@@ -12,7 +12,7 @@ noUiSlider.create(sliderElement, {
   start: 100,
   step: 1,
   connect: 'lower',
-})
+});
 
 sliderElement.noUiSlider.on('update', (...rest) => {
   switch (imgUploadPreview.classList[0]) {
@@ -36,19 +36,19 @@ sliderElement.noUiSlider.on('update', (...rest) => {
 });
 
 function updateSlider (min, max, step, start) {
-    sliderElement.noUiSlider.updateOptions({
-      range: {
-        min: min,
-        max: max,
-      },
-      start: 100,
-      step: step,
-      connect: 'lower',
-    })
+  sliderElement.noUiSlider.updateOptions({
+    range: {
+      min: min,
+      max: max,
+    },
+    start: start,
+    step: step,
+    connect: 'lower',
+  });
 }
 
 effectsList.addEventListener('click', (evt) => {
-  let chosenFilter = evt.target.value;
+  const chosenFilter = evt.target.value;
 
   switch (chosenFilter) {
     case 'none':
@@ -59,38 +59,38 @@ effectsList.addEventListener('click', (evt) => {
     case 'chrome':
       updateSlider(0, 1, 0.1, 1);
       imgUploadPreview.classList = '';
-      imgUploadPreview.classList.add('effects__preview--chrome')
+      imgUploadPreview.classList.add('effects__preview--chrome');
       imgUploadPreview.style.filter = 'grayscale(1)';
       effectsLevel.classList.remove('visually-hidden');
       break;
     case 'sepia':
       updateSlider(0, 100, 1, 100);
       imgUploadPreview.classList = '';
-      imgUploadPreview.classList.add('effects__preview--sepia')
+      imgUploadPreview.classList.add('effects__preview--sepia');
       imgUploadPreview.style.filter = 'sepia(100%)';
       effectsLevel.classList.remove('visually-hidden');
       break;
     case 'marvin':
       updateSlider(0, 100, 1, 100);
       imgUploadPreview.classList = '';
-      imgUploadPreview.classList.add('effects__preview--marvin')
+      imgUploadPreview.classList.add('effects__preview--marvin');
       imgUploadPreview.style.filter = 'invert(100%)';
       effectsLevel.classList.remove('visually-hidden');
       break;
     case 'phobos':
       updateSlider(0, 3, 0.1, 3);
       imgUploadPreview.classList = '';
-      imgUploadPreview.classList.add('effects__preview--phobos')
+      imgUploadPreview.classList.add('effects__preview--phobos');
       imgUploadPreview.style.filter = 'blur(3px)';
       effectsLevel.classList.remove('visually-hidden');
       break;
     case 'heat':
       updateSlider(0, 3, 0.1, 3);
       imgUploadPreview.classList = '';
-      imgUploadPreview.classList.add('effects__preview--heat')
+      imgUploadPreview.classList.add('effects__preview--heat');
       imgUploadPreview.style.filter = 'brightness(3)';
       effectsLevel.classList.remove('visually-hidden');
       break;
     default:
   }
-})
+});

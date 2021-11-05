@@ -14,7 +14,6 @@ const fieldsetLoadForm = imgUploadForm.querySelector('.img-upload__text');
 const hashtagInput = imgUploadForm.querySelector('.text__hashtags');
 const closeButton = imgUploadForm.querySelector('.img-upload__cancel');
 const scaleControlValue = imgUploadForm.querySelector('.scale__control--value');
-const scaleFieldset = imgUploadForm.querySelector('.img-upload__scale');
 const scaleControlSmaller = imgUploadForm.querySelector('.scale__control--smaller');
 const scaleControlBigger = imgUploadForm.querySelector('.scale__control--bigger');
 
@@ -23,6 +22,7 @@ loadForm.addEventListener('change', () => {
   scaleControlValue.value = '100%';
   effectsLevel.classList.add('visually-hidden');
   body.classList.add('modal-open');
+  checkLoadForm();
 
   document.addEventListener('keydown', (evt) => {
     if (isEscapeKey(evt)) {
@@ -50,45 +50,45 @@ function checkLoadForm () {
 }
 
 function setNewScale (scaleValue) {
-  let newScale = scaleValue / SCALE_MAX_VALUE;
+  const newScale = scaleValue / SCALE_MAX_VALUE;
 
-  imgUploadPreview.style.transform = 'scale(' + newScale + ')';
-};
+  imgUploadPreview.style.transform = `scale(${newScale})`;
+}
 
 function getValue () {
-  let value = parseInt(scaleControlValue.value.replace('%', ''), 10);
+  const value = parseInt(scaleControlValue.value.replace('%', ''), 10);
   return value;
-};
+}
 
 function decreaseScaleValue (value) {
-  let decreasedValue = value - SCALE_CHANGE_STEP;
+  const decreasedValue = value - SCALE_CHANGE_STEP;
   return decreasedValue;
-};
+}
 
 function increaseScaleValue (value) {
-  let increasedValue = value + SCALE_CHANGE_STEP;
+  const increasedValue = value + SCALE_CHANGE_STEP;
   return increasedValue;
-};
+}
 
 function scaleControlSmallerClickHandler () {
-  let scaleValue = getValue();
+  const scaleValue = getValue();
 
   if (scaleValue > SCALE_MIN_VALUE) {
-    let newValue = decreaseScaleValue(scaleValue);
+    const newValue = decreaseScaleValue(scaleValue);
     setNewScale(newValue);
-    scaleControlValue.value = newValue + '%';
+    scaleControlValue.value = `${newValue}%`;
   }
-};
+}
 
 function scaleControlBiggerClickHandler () {
-  let scaleValue = getValue();
+  const scaleValue = getValue();
 
   if (scaleValue < SCALE_MAX_VALUE) {
-    let newValue = increaseScaleValue(scaleValue);
+    const newValue = increaseScaleValue(scaleValue);
     setNewScale(newValue);
-    scaleControlValue.value = newValue + '%';
+    scaleControlValue.value = `${newValue}%`;
   }
-};
+}
 
 scaleControlSmaller.addEventListener('click', scaleControlSmallerClickHandler);
 scaleControlBigger.addEventListener('click', scaleControlBiggerClickHandler);
