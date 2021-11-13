@@ -34,8 +34,23 @@ function generatePhoto (firstArgument, ix) {
   };
 }
 
-function getArrayOfPhotos () {
+let photos = null;
+
+function createArrayOfPhotos() {
   return Array(SIZE).fill(null).map(generatePhoto);
+}
+
+function getArrayOfPhotos () {
+  if (photos === null) {
+    photos = createArrayOfPhotos();
+    throw new Error('photos еще не инициализированы');
+  }
+
+  return photos;
+}
+
+function init(aPhotos) {
+  photos = aPhotos;
 }
 
 function isEscapeKey (evt) {
@@ -43,4 +58,21 @@ function isEscapeKey (evt) {
   // document.removeEventListener('keydown', isEscapeKey);
 }
 
-export {getRandomNumber, getRandomArrayElement, generateComment, getArrayOfComments, generatePhoto, getArrayOfPhotos, isEscapeKey};
+function onEscKeyDown (evt)  {
+  if (evt.key === 'Escape' || evt.key === 'Esc') {
+    evt.preventDefault();
+    document.removeEventListener('keydown', onEscKeyDown);
+  }
+}
+
+export {
+  getRandomNumber,
+  getRandomArrayElement,
+  generateComment,
+  getArrayOfComments,
+  generatePhoto,
+  getArrayOfPhotos,
+  isEscapeKey,
+  onEscKeyDown,
+  init
+};
