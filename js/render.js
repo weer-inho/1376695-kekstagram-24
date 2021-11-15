@@ -6,7 +6,6 @@ const template = document.querySelector('#picture')
   .querySelector('a.picture');
 
 const similarListFragment = document.createDocumentFragment();
-// const photos = getArrayOfPhotos();
 
 function renderPhotos (array) {
   array.forEach((photo) => {
