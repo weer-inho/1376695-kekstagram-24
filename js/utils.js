@@ -65,6 +65,10 @@ function onEscKeyDown (evt)  {
   }
 }
 
+function shuffleArray (array) {
+  return array.sort(() => Math.random() - 0.5);
+}
+
 export {
   getRandomNumber,
   getRandomArrayElement,
@@ -74,5 +78,6 @@ export {
   getArrayOfPhotos,
   isEscapeKey,
   onEscKeyDown,
+  shuffleArray,
   init
 };
