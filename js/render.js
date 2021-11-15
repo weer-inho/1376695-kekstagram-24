@@ -1,4 +1,4 @@
-import {getArrayOfPhotos} from './utils.js';
+import {photoListHandler} from './popup.js';
 
 const picturesBlock = document.querySelector('.pictures');
 const template = document.querySelector('#picture')
@@ -6,17 +6,23 @@ const template = document.querySelector('#picture')
   .querySelector('a.picture');
 
 const similarListFragment = document.createDocumentFragment();
+// const photos = getArrayOfPhotos();
 
-const photos = getArrayOfPhotos();
-photos.forEach((photo) => {
-  const photoElement = template.cloneNode(true);
-  photoElement.id = photo.id;
-  photoElement.querySelector('.picture__img').src = photo.url;
-  photoElement.querySelector('.picture__likes').textContent = photo.likes;
-  photoElement.querySelector('.picture__comments').textContent = photo.comments.length;
-  similarListFragment.appendChild(photoElement);
-});
+function renderPhotos (array) {
+  array.forEach((photo) => {
+    const photoElement = template.cloneNode(true);
+    photoElement.id = photo.id;
+    photoElement.querySelector('.picture__img').src = photo.url;
+    photoElement.querySelector('.picture__likes').textContent = photo.likes;
+    photoElement.querySelector('.picture__comments').textContent = photo.comments.length;
+    similarListFragment.appendChild(photoElement);
+  });
 
-picturesBlock.appendChild(similarListFragment);
+  picturesBlock.appendChild(similarListFragment);
+  const pictures = picturesBlock.querySelectorAll('a.picture');
 
-export {photos};
+  photoListHandler(pictures);
+}
+
+
+export {renderPhotos};

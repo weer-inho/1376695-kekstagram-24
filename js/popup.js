@@ -1,30 +1,18 @@
-import {photos} from './render.js';
+import {getArrayOfPhotos, onEscKeyDown} from './utils.js';
 
 const body = document.querySelector('body');
 const popup = document.querySelector('.big-picture');
 const closeButton = popup.querySelector('.big-picture__cancel');
-const pictures = body.querySelectorAll('a.picture');
 const socialComments = popup.querySelector('.social__comments');
 const commentsList = document.createDocumentFragment();
 
-function photoListHandler () {
+function photoListHandler (pictures) {
   pictures.forEach((picture) => {
     picture.addEventListener('click', (evt) => {
       popup.classList.remove('hidden');
       findChosenPhoto(evt);
     });
   });
-}
-
-photoListHandler();
-
-function onEscKeyDown (evt)  {
-  if (evt.key === 'Escape' || evt.key === 'Esc') {
-    evt.preventDefault();
-    popup.classList.add('hidden');
-    body.classList.remove('modal-open');
-    document.removeEventListener('keydown', onEscKeyDown);
-  }
 }
 
 function closePopupButton () {
@@ -34,7 +22,11 @@ function closePopupButton () {
 }
 
 function renderPopup (photo) {
-  document.addEventListener('keydown', onEscKeyDown);
+  document.addEventListener('keydown', (evt) => {
+    onEscKeyDown(evt);
+    popup.classList.add('hidden');
+    body.classList.remove('modal-open');
+  });
   closeButton.addEventListener('click', closePopupButton);
   body.classList.add('modal-open');
 
@@ -94,6 +86,14 @@ function renderCommentSection(array) {
   socialComments.appendChild(commentsList);
 }
 
+function getCurrentPhoto(photoId) {
+  const photos = getArrayOfPhotos();
+
+  const currentPhoto = photos[photoId];
+
+  return currentPhoto;
+}
+
 function findChosenPhoto (evt) {
   const target = evt.target;
   const isTargetCorrect = target.classList.contains('picture__img');
@@ -103,6 +103,8 @@ function findChosenPhoto (evt) {
   }
 
   const photoId = target.closest('.picture').id;
-  const currentPhoto = photos[photoId-1];
+  const currentPhoto = getCurrentPhoto(photoId);
   renderPopup(currentPhoto);
 }
+
+export {photoListHandler};

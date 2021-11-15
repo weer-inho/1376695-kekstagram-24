@@ -1,7 +1,7 @@
-import {imgUploadForm, imgUploadPreview, effectsLevel} from './form.js';
+import {imgUploadOverlay, imgUploadPreview, effectsLevel} from './form.js';
 
-const sliderElement = imgUploadForm.querySelector('.effect-level__slider');
-const effectsList = imgUploadForm.querySelector('.effects__list');
+const sliderElement = imgUploadOverlay.querySelector('.effect-level__slider');
+const effectsList = imgUploadOverlay.querySelector('.effects__list');
 
 
 noUiSlider.create(sliderElement, {
