@@ -58,10 +58,11 @@ function isEscapeKey (evt) {
   // document.removeEventListener('keydown', isEscapeKey);
 }
 
-function onEscKeyDown (evt)  {
+function onEscKeyDown (evt, callback)  {
   if (evt.key === 'Escape' || evt.key === 'Esc') {
     evt.preventDefault();
     document.removeEventListener('keydown', onEscKeyDown);
+    callback();
   }
 }
 
