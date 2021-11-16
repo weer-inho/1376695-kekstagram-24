@@ -23,9 +23,10 @@ function closePopupButton () {
 
 function renderPopup (photo) {
   document.addEventListener('keydown', (evt) => {
-    onEscKeyDown(evt);
-    popup.classList.add('hidden');
-    body.classList.remove('modal-open');
+    onEscKeyDown(evt, () => {
+      popup.classList.add('hidden');
+      body.classList.remove('modal-open');
+    });
   });
   closeButton.addEventListener('click', closePopupButton);
   body.classList.add('modal-open');
