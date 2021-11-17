@@ -20,7 +20,7 @@ function renderPhotos (array) {
   picturesBlock.appendChild(similarListFragment);
   const pictures = picturesBlock.querySelectorAll('a.picture');
 
-  photoListHandler(pictures);
+  photoListHandler(pictures, array);
 }
 
 

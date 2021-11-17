@@ -1,4 +1,4 @@
-import {getArrayOfPhotos, onEscKeyDown} from './utils.js';
+import {onEscKeyDown} from './utils.js';
 
 const body = document.querySelector('body');
 const popup = document.querySelector('.big-picture');
@@ -6,11 +6,11 @@ const closeButton = popup.querySelector('.big-picture__cancel');
 const socialComments = popup.querySelector('.social__comments');
 const commentsList = document.createDocumentFragment();
 
-function photoListHandler (pictures) {
+function photoListHandler (pictures, array) {
   pictures.forEach((picture) => {
     picture.addEventListener('click', (evt) => {
       popup.classList.remove('hidden');
-      findChosenPhoto(evt);
+      findChosenPhoto(evt, array);
     });
   });
 }
@@ -87,15 +87,7 @@ function renderCommentSection(array) {
   socialComments.appendChild(commentsList);
 }
 
-function getCurrentPhoto(photoId) {
-  const photos = getArrayOfPhotos();
-
-  const currentPhoto = photos[photoId];
-
-  return currentPhoto;
-}
-
-function findChosenPhoto (evt) {
+function findChosenPhoto (evt, array) {
   const target = evt.target;
   const isTargetCorrect = target.classList.contains('picture__img');
 
@@ -104,7 +96,8 @@ function findChosenPhoto (evt) {
   }
 
   const photoId = target.closest('.picture').id;
-  const currentPhoto = getCurrentPhoto(photoId);
+  const currentPhoto = array.find((element) => Number(element.id) === Number(photoId));
+
   renderPopup(currentPhoto);
 }
 
