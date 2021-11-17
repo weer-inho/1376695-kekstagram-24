@@ -1,4 +1,4 @@
-import {getArrayOfPhotos, onEscKeyDown} from './utils.js';
+import {onEscKeyDown} from './utils.js';
 
 const body = document.querySelector('body');
 const popup = document.querySelector('.big-picture');
@@ -87,14 +87,6 @@ function renderCommentSection(array) {
   socialComments.appendChild(commentsList);
 }
 
-function getCurrentPhoto(photoId) {
-  const photos = getArrayOfPhotos();
-
-  const currentPhoto = photos[photoId];
-
-  return currentPhoto;
-}
-
 function findChosenPhoto (evt, array) {
   const target = evt.target;
   const isTargetCorrect = target.classList.contains('picture__img');
@@ -104,8 +96,7 @@ function findChosenPhoto (evt, array) {
   }
 
   const photoId = target.closest('.picture').id;
-  const currentPhoto = array.find(element => element.id == photoId);
-
+  const currentPhoto = array.find((element) => Number(element.id) === Number(photoId));
 
   renderPopup(currentPhoto);
 }
