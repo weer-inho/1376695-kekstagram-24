@@ -1,6 +1,6 @@
 import {isEscapeKey, onEscKeyDown} from './utils.js';
 
-const regExp = new RegExp(/^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/);
+const REGULAR_EXPRESSION = new RegExp(/^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/);
 const SCALE_CHANGE_STEP = 25;
 const SCALE_MIN_VALUE = 25;
 const SCALE_MAX_VALUE = 100;
@@ -44,7 +44,7 @@ closeButton.addEventListener('click', () => {
 
 function checkLoadForm () {
   fieldsetLoadForm.addEventListener('change', () => {
-    if (!regExp.test(hashtagInput.value)) {
+    if (!REGULAR_EXPRESSION.test(hashtagInput.value)) {
       submitButton.setAttribute('disabled', 'disabled');
     } else {
       submitButton.removeAttribute('disabled', 'disabled');
