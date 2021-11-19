@@ -73,7 +73,6 @@ function renderCommentSection(array) {
       socialComments.appendChild(commentsList);
 
       if (array.length <= currentCommentCount) {
-        // socialCommentCount.classList.add('hidden');
         commentsLoader.classList.add('hidden');
       }
     });
