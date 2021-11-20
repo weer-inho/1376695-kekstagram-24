@@ -1,6 +1,6 @@
 import {isEscapeKey, onEscKeyDown} from './utils.js';
+import {checkLoadForm} from './hashtag-validation.js';
 
-const regExp = new RegExp(/^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/);
 const SCALE_CHANGE_STEP = 25;
 const SCALE_MIN_VALUE = 25;
 const SCALE_MAX_VALUE = 100;
@@ -8,11 +8,10 @@ const body = document.querySelector('body');
 const loadForm = document.querySelector('#upload-file');
 const imgUploadForm = document.querySelector('.img-upload__form');
 const imgUploadOverlay = imgUploadForm.querySelector('.img-upload__overlay');
-const submitButton = imgUploadOverlay.querySelector('.img-upload__submit');
 const effectsLevel = imgUploadOverlay.querySelector('.img-upload__effect-level');
 const imgUploadPreview = imgUploadOverlay.querySelector('.img-upload__preview img');
-const fieldsetLoadForm = imgUploadOverlay.querySelector('.img-upload__text');
 const hashtagInput = imgUploadOverlay.querySelector('.text__hashtags');
+const commentInput = imgUploadOverlay.querySelector('.text__description');
 const closeButton = imgUploadOverlay.querySelector('.img-upload__cancel');
 const scaleControlValue = imgUploadOverlay.querySelector('.scale__control--value');
 const scaleControlSmaller = imgUploadOverlay.querySelector('.scale__control--smaller');
@@ -20,6 +19,8 @@ const scaleControlBigger = imgUploadOverlay.querySelector('.scale__control--bigg
 
 loadForm.addEventListener('change', () => {
   imgUploadOverlay.classList.remove('hidden');
+  hashtagInput.value = '';
+  commentInput.value = '';
   scaleControlValue.value = '100%';
   imgUploadPreview.style.filter = 'none';
   imgUploadPreview.style.transform = 'scale(1)';
@@ -41,16 +42,6 @@ closeButton.addEventListener('click', () => {
   body.classList.remove('modal-open');
   loadForm.value = '';
 });
-
-function checkLoadForm () {
-  fieldsetLoadForm.addEventListener('change', () => {
-    if (!regExp.test(hashtagInput.value)) {
-      submitButton.setAttribute('disabled', 'disabled');
-    } else {
-      submitButton.removeAttribute('disabled', 'disabled');
-    }
-  });
-}
 
 function setNewScale (scaleValue) {
   const newScale = scaleValue / SCALE_MAX_VALUE;
@@ -94,42 +85,43 @@ function scaleControlBiggerClickHandler () {
 }
 
 function onSuccess () {
-  const successElement = document.createElement('section');
-  successElement.classList.add('success');
-  successElement.innerHTML = `
-      <div class="success__inner">
-        <h2 class="success__title">Изображение успешно загружено</h2>
-        <button type="button" class="success__button">Круто!</button>
-      </div>`;
+  const successTemplate = body.querySelector('#success');
+  const successElement = successTemplate.content.querySelector('section.success');
   body.appendChild(successElement);
 
   const successButton = successElement.querySelector('.success__button');
-  successButton.addEventListener('click', () => {
+  let handleMouse = null;
+  let handleEscape = null;
+  const closeMessage = () => {
     body.removeChild(successElement);
-  });
-  document.addEventListener('keydown', (evt) => {
-    onEscKeyDown(evt);
-    body.removeChild(successElement);
-  });
+    successButton.removeEventListener('click', handleMouse);
+    document.removeEventListener('keydown', handleEscape);
+  };
+
+  handleMouse = () => {
+    closeMessage();
+  };
+
+  handleEscape = (evt) => {
+    onEscKeyDown(evt, closeMessage);
+  };
+
+  successButton.addEventListener('click', handleMouse);
+  document.addEventListener('keydown', handleEscape);
 }
 
 function onFail () {
-  const failElement = document.createElement('section');
-  failElement.classList.add('error');
-  failElement.innerHTML = `
-      <div class="error__inner">
-        <h2 class="error__title">Ошибка загрузки файла</h2>
-        <button type="button" class="error__button">Загрузить другой файл</button>
-      </div>`;
+  const failTemplate = body.querySelector('#error');
+  const failElement = failTemplate.content.querySelector('section.error');
   body.appendChild(failElement);
 
   const failButton = failElement.querySelector('button');
   failButton.addEventListener('click', () => {
-    body.removeChild(failElement);
+    failElement.classList.add('visually-hidden');
   });
   document.addEventListener('keydown', (evt) => {
     onEscKeyDown(evt);
-    body.removeChild(failElement);
+    failElement.classList.add('visually-hidden');
   });
 }
 
@@ -152,7 +144,8 @@ function sendData(successFunction, failFunction) {
         } else {
           failFunction();
         }
-      });
+      })
+      .catch(failFunction);
     imgUploadOverlay.classList.add('hidden');
   });
 }

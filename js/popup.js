@@ -48,39 +48,41 @@ function renderComment (comment) {
   commentsList.appendChild(commentElement);
 }
 
-function renderCommentsArray(array) {
-  array.forEach((element) => renderComment(element));
+function renderCommentsArray(comments) {
+  comments.forEach((element) => renderComment(element));
 }
 
-function renderCommentSection(array) {
+function renderCommentSection(comments) {
   const socialCommentCount = popup.querySelector('.social__comment-count');
   const commentsLoader = popup.querySelector('.comments-loader');
+  const currentCommentCountElement = popup.querySelector('.current-comments-count');
+  currentCommentCountElement.textContent = 5;
 
   let currentCommentCount = 5;
-  if (array.length > currentCommentCount) {
+  if (comments.length > currentCommentCount) {
     socialCommentCount.classList.remove('hidden');
     commentsLoader.classList.remove('hidden');
 
-    const currentComments = array.slice(0, currentCommentCount);
+    const currentComments = comments.slice(0, currentCommentCount);
     renderCommentsArray(currentComments);
 
     commentsLoader.addEventListener('click', () => {
       const nextCommentCount = 5 + currentCommentCount;
-      const nextComments = array.slice(currentCommentCount, nextCommentCount);
+      const nextComments = comments.slice(currentCommentCount, nextCommentCount);
       currentCommentCount = nextCommentCount;
-      popup.querySelector('.current-comments-count').textContent = currentCommentCount;
+      currentCommentCountElement.textContent = currentCommentCount;
       renderCommentsArray(nextComments);
       socialComments.appendChild(commentsList);
 
-      if (array.length <= currentCommentCount) {
-        // socialCommentCount.classList.add('hidden');
+      if (comments.length <= currentCommentCount) {
         commentsLoader.classList.add('hidden');
+        currentCommentCountElement.textContent = comments.length;
       }
     });
   } else {
     socialCommentCount.classList.add('hidden');
     commentsLoader.classList.add('hidden');
-    renderCommentsArray(array);
+    renderCommentsArray(comments);
   }
 
   socialComments.textContent = '';
