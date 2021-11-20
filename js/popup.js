@@ -55,6 +55,8 @@ function renderCommentsArray(comments) {
 function renderCommentSection(comments) {
   const socialCommentCount = popup.querySelector('.social__comment-count');
   const commentsLoader = popup.querySelector('.comments-loader');
+  let currentCommentCountElement = popup.querySelector('.current-comments-count');
+  currentCommentCountElement.textContent = 5;
 
   let currentCommentCount = 5;
   if (comments.length > currentCommentCount) {
@@ -68,12 +70,13 @@ function renderCommentSection(comments) {
       const nextCommentCount = 5 + currentCommentCount;
       const nextComments = comments.slice(currentCommentCount, nextCommentCount);
       currentCommentCount = nextCommentCount;
-      popup.querySelector('.current-comments-count').textContent = currentCommentCount;
+      currentCommentCountElement.textContent = currentCommentCount;
       renderCommentsArray(nextComments);
       socialComments.appendChild(commentsList);
 
       if (comments.length <= currentCommentCount) {
         commentsLoader.classList.add('hidden');
+        currentCommentCountElement.textContent = comments.length;
       }
     });
   } else {
