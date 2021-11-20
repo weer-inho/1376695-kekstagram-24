@@ -1,75 +1,51 @@
-// const MAX_HASHTAG_COUNT = 5;
-// const MAX_HASHTAG_LENGTH = 20;
-// const MIN_HASHTAG_LENGTH = 2;
-// const MESSAGE_1 = 'хэш-тег начинается с символа # (решётка)';
-// const MESSAGE_2 = 'строка после решётки должна состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д';
-// const MESSAGE_3 = 'хеш-тег не может состоять только из одной решётки';
-// const MESSAGE_4 = 'максимальная длина одного хэш-тега 20 символов, включая решётку';
-// const MESSAGE_5 = 'один и тот же хэш-тег не может быть использован дважды';
-// const REGULAR_EXPRESSION = '^#[A-Za-zА-Яа-яЁё0-9]{1,19}$';
-// const regExp = new RegExp(REGULAR_EXPRESSION);
+import {Hashtag, objectForChecking} from './data.js';
 
-// function applyRules(element) {
-//   if (element[0] !== '#') {
-//     return MESSAGE_1;
-//   }
+const uploadForm = document.querySelector(`.img-upload__form`);
+const hashTagsInput = uploadForm.querySelector(`.text__hashtags`);
+const commentField = uploadForm.querySelector(`.text__description`);
+const submitButton = uploadForm.querySelector(`.img-upload__submit`);
 
-//   if (element.length < MIN_HASHTAG_LENGTH) {
-//     return MESSAGE_3;
-//   }
+const getArrayWithoutVoids = (array) =>
+  array.reduce((acc, value) => value === '' ? acc : [...acc, value], []);
 
-//   if (element.length > MAX_HASHTAG_LENGTH) {
-//     return MESSAGE_4;
-//   }
+function getArrayOfHashtags (value) {
+  const arrayOfHashtags = value.split(` `).map(((value) => value.toLowerCase()));
+  return getArrayWithoutVoids(arrayOfHashtags);
+};
 
-//   if (!regExp.test(element)) {
-//     return MESSAGE_2;
-//   }
-// }
+const getCheckAction = (arg) => objectForChecking.find(({check}) => check(arg));
 
-// function inc(current) {
-//   if (Number.isFinite(current)) {
-//     return current + 1;
-//   };
+const updateValidity = (...fields) => {
+  fields.forEach((field) => {
+    field.addEventListener(`input`, () => {
+      field.setCustomValidity(``);
+    });
+  });
+};
 
-//   return 1;
-// }
+function analyzeHashtags (value) {
+  const hashTags = getArrayOfHashtags(value);
+  const {customValidity} = getCheckAction(hashTags);
+  if (customValidity) {
+    hashTagsInput.setCustomValidity(customValidity);
+  } else {
+    hashTagsInput.setCustomValidity(``);
+  }
+};
 
-// function countTags (tagsCount, element) {
-//   const upperCaseElement = element.toUpperCase();
-//   return {
-//     ...tagsCount,
-//     [upperCaseElement]: inc(tagsCount[upperCaseElement])
-//   }
-// }
+export function checkLoadForm () {
+  updateValidity(hashTagsInput, commentField);
 
-// function analyzeSingleTag(accumulator, element) {
-//   const {tagsCount, message} = accumulator;
-//   const newTagsCount = countTags(tagsCount, element);
-//   return {
-//     tagsCount: newTagsCount,
-//     message: `${message} ${applyRules(element)} ${newTagsCount > 1 ? MESSAGE_5 : ''}`,
-//   };
-// }
+  submitButton.addEventListener(`click`, () => {
+    analyzeHashtags(hashTagsInput.value);
+  });
 
-// function analyzeTags (values) {
-//   const result = values.reduce(analyzeSingleTag, {tagsCount: {}, message: ''});
-//   return result.message;
-// }
+  uploadForm.addEventListener(`invalid`, function (evt) {
+    evt.target.style.border = `2px solid #ff0000`;
+  }, true);
 
-// function hashtagValidationInternal (value) {
-//   const values = value.split(' ');
-//   if (values.length > MAX_HASHTAG_COUNT) {
-//     return `Количество хэштегов превышает ${MAX_HASHTAG_COUNT}`;
-//   }
-
-//   return analyzeTags(values);
-// }
-
-export function hashtagValidation (value) {
-  if (typeof value !== 'string' || value === '') {
-    return false;
-  };
-
-  // hashtagValidationInternal(value)
+  uploadForm.addEventListener(`input`, function (evt) {
+    evt.target.style.border = ``;
+  });
 }
+

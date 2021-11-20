@@ -1,6 +1,6 @@
 import {isEscapeKey, onEscKeyDown} from './utils.js';
+import {checkLoadForm} from './hashtag-validation.js';
 
-const regExp = new RegExp(/^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/);
 const SCALE_CHANGE_STEP = 25;
 const SCALE_MIN_VALUE = 25;
 const SCALE_MAX_VALUE = 100;
@@ -13,6 +13,7 @@ const effectsLevel = imgUploadOverlay.querySelector('.img-upload__effect-level')
 const imgUploadPreview = imgUploadOverlay.querySelector('.img-upload__preview img');
 const fieldsetLoadForm = imgUploadOverlay.querySelector('.img-upload__text');
 const hashtagInput = imgUploadOverlay.querySelector('.text__hashtags');
+const commentInput = imgUploadOverlay.querySelector('.text__description');
 const closeButton = imgUploadOverlay.querySelector('.img-upload__cancel');
 const scaleControlValue = imgUploadOverlay.querySelector('.scale__control--value');
 const scaleControlSmaller = imgUploadOverlay.querySelector('.scale__control--smaller');
@@ -20,6 +21,8 @@ const scaleControlBigger = imgUploadOverlay.querySelector('.scale__control--bigg
 
 loadForm.addEventListener('change', () => {
   imgUploadOverlay.classList.remove('hidden');
+  hashtagInput.value = '';
+  commentInput.value = '';
   scaleControlValue.value = '100%';
   imgUploadPreview.style.filter = 'none';
   imgUploadPreview.style.transform = 'scale(1)';
@@ -41,19 +44,6 @@ closeButton.addEventListener('click', () => {
   body.classList.remove('modal-open');
   loadForm.value = '';
 });
-
-function checkLoadForm () {
-  fieldsetLoadForm.addEventListener('change', () => {
-    if (!regExp.test(hashtagInput.value)) {
-      submitButton.setAttribute('disabled', 'disabled');
-      hashtagInput.setCustomValidity('Некорректный хештег')
-    } else {
-      submitButton.removeAttribute('disabled', 'disabled');
-      hashtagInput.setCustomValidity('')
-    }
-    hashtagInput.reportValidity()
-  });
-}
 
 function setNewScale (scaleValue) {
   const newScale = scaleValue / SCALE_MAX_VALUE;
@@ -129,11 +119,11 @@ function onFail () {
 
   const failButton = failElement.querySelector('button');
   failButton.addEventListener('click', () => {
-    body.removeChild(failElement);
+    failElement.classList.add('visually-hidden');
   });
   document.addEventListener('keydown', (evt) => {
     onEscKeyDown(evt);
-    body.removeChild(failElement);
+    failElement.classList.add('visually-hidden');
   });
 }
 

@@ -27,15 +27,15 @@ function imgFilterHandler () {
     switch (evt.target.id) {
       case 'filter-default':
         renderServerPhotos();
-        evt.target.classList.add('img-filters__button--active');
+        evt.target.classList.add('img-filters__button--active')
         break;
       case 'filter-random':
         renderRandomServerPhotos();
-        evt.target.classList.add('img-filters__button--active');
+        evt.target.classList.add('img-filters__button--active')
         break;
       case 'filter-discussed':
         renderMostCommentServerPhotos();
-        evt.target.classList.add('img-filters__button--active');
+        evt.target.classList.add('img-filters__button--active')
         break;
       default:
     }
