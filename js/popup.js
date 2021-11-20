@@ -55,7 +55,7 @@ function renderCommentsArray(comments) {
 function renderCommentSection(comments) {
   const socialCommentCount = popup.querySelector('.social__comment-count');
   const commentsLoader = popup.querySelector('.comments-loader');
-  let currentCommentCountElement = popup.querySelector('.current-comments-count');
+  const currentCommentCountElement = popup.querySelector('.current-comments-count');
   currentCommentCountElement.textContent = 5;
 
   let currentCommentCount = 5;

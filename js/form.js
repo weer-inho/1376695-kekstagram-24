@@ -8,10 +8,8 @@ const body = document.querySelector('body');
 const loadForm = document.querySelector('#upload-file');
 const imgUploadForm = document.querySelector('.img-upload__form');
 const imgUploadOverlay = imgUploadForm.querySelector('.img-upload__overlay');
-const submitButton = imgUploadOverlay.querySelector('.img-upload__submit');
 const effectsLevel = imgUploadOverlay.querySelector('.img-upload__effect-level');
 const imgUploadPreview = imgUploadOverlay.querySelector('.img-upload__preview img');
-const fieldsetLoadForm = imgUploadOverlay.querySelector('.img-upload__text');
 const hashtagInput = imgUploadOverlay.querySelector('.text__hashtags');
 const commentInput = imgUploadOverlay.querySelector('.text__description');
 const closeButton = imgUploadOverlay.querySelector('.img-upload__cancel');
@@ -88,7 +86,7 @@ function scaleControlBiggerClickHandler () {
 
 function onSuccess () {
   const successTemplate = body.querySelector('#success');
-  const successElement = successTemplate.content.querySelector('section.success')
+  const successElement = successTemplate.content.querySelector('section.success');
   body.appendChild(successElement);
 
   const successButton = successElement.querySelector('.success__button');
@@ -114,7 +112,7 @@ function onSuccess () {
 
 function onFail () {
   const failTemplate = body.querySelector('#error');
-  const failElement = failTemplate.content.querySelector('section.error')
+  const failElement = failTemplate.content.querySelector('section.error');
   body.appendChild(failElement);
 
   const failButton = failElement.querySelector('button');

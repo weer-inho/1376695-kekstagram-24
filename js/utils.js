@@ -53,11 +53,11 @@ function shuffleArray (array) {
 function checkForDuplicates(array) {
   const valuesSoFar = [];
   for (let i = 0; i < array.length; ++i) {
-      let value = array[i];
-      if (valuesSoFar.indexOf(value) !== -1) {
-          return false;
-      }
-      valuesSoFar.push(value);
+    const value = array[i];
+    if (valuesSoFar.indexOf(value) !== -1) {
+      return false;
+    }
+    valuesSoFar.push(value);
   }
   return true;
 }
