@@ -46,9 +46,12 @@ function checkLoadForm () {
   fieldsetLoadForm.addEventListener('change', () => {
     if (!regExp.test(hashtagInput.value)) {
       submitButton.setAttribute('disabled', 'disabled');
+      hashtagInput.setCustomValidity('Некорректный хештег')
     } else {
       submitButton.removeAttribute('disabled', 'disabled');
+      hashtagInput.setCustomValidity('')
     }
+    hashtagInput.reportValidity()
   });
 }
 
@@ -163,7 +166,8 @@ function sendData(successFunction, failFunction) {
         } else {
           failFunction();
         }
-      });
+      })
+      .catch(failFunction);
     imgUploadOverlay.classList.add('hidden');
   });
 }
