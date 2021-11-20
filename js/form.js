@@ -104,13 +104,24 @@ function onSuccess () {
   body.appendChild(successElement);
 
   const successButton = successElement.querySelector('.success__button');
-  successButton.addEventListener('click', () => {
+  let handleMouse = null;
+  let handleEscape = null;
+  const closeMessage = () => {
     body.removeChild(successElement);
-  });
-  document.addEventListener('keydown', (evt) => {
-    onEscKeyDown(evt);
-    body.removeChild(successElement);
-  });
+    successButton.removeEventListener('click', handleMouse);
+    document.removeEventListener('keydown', handleEscape);
+  };
+
+  handleMouse = () => {
+    closeMessage();
+  };
+
+  handleEscape = (evt) => {
+    onEscKeyDown(evt, closeMessage);
+  };
+
+  successButton.addEventListener('click', handleMouse);
+  document.addEventListener('keydown', handleEscape);
 }
 
 function onFail () {

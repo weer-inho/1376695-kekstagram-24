@@ -35,12 +35,11 @@ function generatePhoto (firstArgument, ix) {
 }
 
 function isEscapeKey (evt) {
-  return evt.key === 'Escape';
-  // document.removeEventListener('keydown', isEscapeKey);
+  return evt.key === 'Escape' || evt.key === 'Esc';
 }
 
 function onEscKeyDown (evt, callback)  {
-  if (evt.key === 'Escape' || evt.key === 'Esc') {
+  if (isEscapeKey(evt)) {
     evt.preventDefault();
     document.removeEventListener('keydown', onEscKeyDown);
     callback();
