@@ -97,13 +97,8 @@ function scaleControlBiggerClickHandler () {
 }
 
 function onSuccess () {
-  const successElement = document.createElement('section');
-  successElement.classList.add('success');
-  successElement.innerHTML = `
-      <div class="success__inner">
-        <h2 class="success__title">Изображение успешно загружено</h2>
-        <button type="button" class="success__button">Круто!</button>
-      </div>`;
+  const successTemplate = body.querySelector('#success');
+  const successElement = successTemplate.content.querySelector('section.success')
   body.appendChild(successElement);
 
   const successButton = successElement.querySelector('.success__button');
@@ -128,13 +123,8 @@ function onSuccess () {
 }
 
 function onFail () {
-  const failElement = document.createElement('section');
-  failElement.classList.add('error');
-  failElement.innerHTML = `
-      <div class="error__inner">
-        <h2 class="error__title">Ошибка загрузки файла</h2>
-        <button type="button" class="error__button">Загрузить другой файл</button>
-      </div>`;
+  const failTemplate = body.querySelector('#error');
+  const failElement = failTemplate.content.querySelector('section.error')
   body.appendChild(failElement);
 
   const failButton = failElement.querySelector('button');
