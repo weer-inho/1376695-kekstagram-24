@@ -41,6 +41,7 @@ const Hashtag = {
   MIN_SIZE: 2,
   MAX_SIZE: 20,
   AMOUNT: 5,
+  REGULAR_EXPRESSION: new RegExp(/^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/),
 };
 
 const objectForChecking = [
@@ -67,6 +68,10 @@ const objectForChecking = [
   {
     customValidity: 'Один и тот же хештег не может быть использован дважды',
     checkValue: (testedHashtag) => testedHashtag.some((value, index, arr) => arr.indexOf(value) !== index),
+  },
+  {
+    customValidity: 'Cтрока после решётки должна состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.',
+    checkValue: (testedHashtag) => testedHashtag.some((value) => !Hashtag.REGULAR_EXPRESSION.test(value)),
   },
   {
     customValidity: false,
