@@ -46,31 +46,31 @@ const Hashtag = {
 const objectForChecking = [
   {
     customValidity: false,
-    check: (arg) => arg.length === 0,
-  },
-  {
-    customValidity: false,
-    check: (arg) => arg,
+    checkValue: (testedHashtag) => testedHashtag.length === 0,
   },
   {
     customValidity: `Нельзя указать больше ${Hashtag.AMOUNT} хэш-тегов`,
-    check: (arg) => arg.length > Hashtag.AMOUNT,
+    checkValue: (testedHashtag) => testedHashtag.length > Hashtag.AMOUNT,
   },
   {
-    customValidity: 'Хэштег должен начинаться с символа решетки',
-    check: (arg) => arg.some((value) => value[0] !== Hashtag.GRID),
+    customValidity: 'Хештег должен начинаться с символа #',
+    checkValue: (testedHashtag) => testedHashtag.some((value) => value[0] !== Hashtag.GRID),
   },
   {
-    customValidity: 'Хэштег не может состоять только из одной решётки',
-    check: (arg) => arg.some((value) => value.length < Hashtag.MIN_SIZE),
+    customValidity: 'Хештег не может состоять только из одной решётки',
+    checkValue: (testedHashtag) => testedHashtag.some((value) => value.length < Hashtag.MIN_SIZE),
   },
   {
-    customValidity: `Максимальная длина одного хэштега ${Hashtag.MAX_SIZE} символов, включая решётку`,
-    check: (arg) => arg.some((value) => value.length > Hashtag.MAX_SIZE),
+    customValidity: `Максимальная длина одного хештега ${Hashtag.MAX_SIZE} символов, включая решётку`,
+    checkValue: (testedHashtag) => testedHashtag.some((value) => value.length > Hashtag.MAX_SIZE),
   },
   {
-    customValidity: 'Один и тот же хэштег не может быть использован дважды',
-    check: (arg) => arg.some((value, index, arr) => arr.indexOf(value) !== index),
+    customValidity: 'Один и тот же хештег не может быть использован дважды',
+    checkValue: (testedHashtag) => testedHashtag.some((value, index, arr) => arr.indexOf(value) !== index),
+  },
+  {
+    customValidity: false,
+    checkValue: (testedHashtag) => testedHashtag,
   },
 ];
 
