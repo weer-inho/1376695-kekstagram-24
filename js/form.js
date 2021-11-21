@@ -17,6 +17,14 @@ const scaleControlValue = imgUploadOverlay.querySelector('.scale__control--value
 const scaleControlSmaller = imgUploadOverlay.querySelector('.scale__control--smaller');
 const scaleControlBigger = imgUploadOverlay.querySelector('.scale__control--bigger');
 
+function escapeFromForm (evt) {
+  if (isEscapeKey(evt)) {
+    imgUploadOverlay.classList.add('hidden');
+    body.classList.remove('modal-open');
+    loadForm.value = '';
+  }
+}
+
 loadForm.addEventListener('change', () => {
   imgUploadOverlay.classList.remove('hidden');
   hashtagInput.value = '';
@@ -28,14 +36,24 @@ loadForm.addEventListener('change', () => {
   body.classList.add('modal-open');
   checkLoadForm();
 
-  document.addEventListener('keydown', (evt) => {
-    if (isEscapeKey(evt)) {
-      imgUploadOverlay.classList.add('hidden');
-      body.classList.remove('modal-open');
-      loadForm.value = '';
-    }
-  });
+  document.addEventListener('keydown', escapeFromForm);
 });
+
+hashtagInput.onfocus = function () {
+  document.removeEventListener('keydown', escapeFromForm);
+};
+
+hashtagInput.onblur = function () {
+  document.addEventListener('keydown', escapeFromForm);
+};
+
+commentInput.onfocus = function () {
+  document.removeEventListener('keydown', escapeFromForm);
+};
+
+commentInput.onblur = function () {
+  document.addEventListener('keydown', escapeFromForm);
+};
 
 closeButton.addEventListener('click', () => {
   imgUploadOverlay.classList.add('hidden');
@@ -84,9 +102,13 @@ function scaleControlBiggerClickHandler () {
   }
 }
 
+function resetForm(){
+  imgUploadForm.reset();
+}
+
 function onSuccess () {
   const successTemplate = body.querySelector('#success');
-  const successElement = successTemplate.content.querySelector('section.success');
+  const successElement = successTemplate.content.querySelector('section.success').cloneNode(true);
   body.appendChild(successElement);
 
   const successButton = successElement.querySelector('.success__button');
@@ -96,6 +118,7 @@ function onSuccess () {
     body.removeChild(successElement);
     successButton.removeEventListener('click', handleMouse);
     document.removeEventListener('keydown', handleEscape);
+    resetForm();
   };
 
   handleMouse = () => {
@@ -112,7 +135,7 @@ function onSuccess () {
 
 function onFail () {
   const failTemplate = body.querySelector('#error');
-  const failElement = failTemplate.content.querySelector('section.error');
+  const failElement = failTemplate.content.querySelector('section.error').cloneNode(true);
   body.appendChild(failElement);
 
   const failButton = failElement.querySelector('button');
@@ -124,6 +147,7 @@ function onFail () {
     failElement.classList.add('visually-hidden');
   });
 }
+
 
 function sendData(successFunction, failFunction) {
   imgUploadForm.addEventListener('submit', (evt) => {
