@@ -9,6 +9,7 @@ const body = document.querySelector('body');
 const fileChooser = body.querySelector('.img-upload__input');
 const preview = body.querySelector('.img-upload__preview img');
 const filterForm = body.querySelector('.img-filters__form');
+const filtersButtons = filterForm.querySelectorAll('.img-filters__button');
 const picturesContainer = body.querySelector('.pictures.container');
 
 function deletePhotos () {
@@ -21,16 +22,20 @@ function deletePhotos () {
 function imgFilterHandler () {
   filterForm.addEventListener('click', _.debounce((evt) => {
     deletePhotos();
+    filtersButtons.forEach((button) => button.classList.remove('img-filters__button--active'));
 
     switch (evt.target.id) {
       case 'filter-default':
         renderServerPhotos();
+        evt.target.classList.add('img-filters__button--active');
         break;
       case 'filter-random':
         renderRandomServerPhotos();
+        evt.target.classList.add('img-filters__button--active');
         break;
       case 'filter-discussed':
         renderMostCommentServerPhotos();
+        evt.target.classList.add('img-filters__button--active');
         break;
       default:
     }

@@ -35,12 +35,11 @@ function generatePhoto (firstArgument, ix) {
 }
 
 function isEscapeKey (evt) {
-  return evt.key === 'Escape';
-  // document.removeEventListener('keydown', isEscapeKey);
+  return evt.key === 'Escape' || evt.key === 'Esc';
 }
 
 function onEscKeyDown (evt, callback)  {
-  if (evt.key === 'Escape' || evt.key === 'Esc') {
+  if (isEscapeKey(evt)) {
     evt.preventDefault();
     document.removeEventListener('keydown', onEscKeyDown);
     callback();
@@ -51,6 +50,18 @@ function shuffleArray (array) {
   return array.sort(() => Math.random() - 0.5);
 }
 
+function checkForDuplicates(array) {
+  const valuesSoFar = [];
+  for (let i = 0; i < array.length; ++i) {
+    const value = array[i];
+    if (valuesSoFar.indexOf(value) !== -1) {
+      return false;
+    }
+    valuesSoFar.push(value);
+  }
+  return true;
+}
+
 export {
   getRandomNumber,
   getRandomArrayElement,
@@ -59,5 +70,6 @@ export {
   generatePhoto,
   isEscapeKey,
   onEscKeyDown,
-  shuffleArray
+  shuffleArray,
+  checkForDuplicates
 };

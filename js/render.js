@@ -7,8 +7,8 @@ const template = document.querySelector('#picture')
 
 const similarListFragment = document.createDocumentFragment();
 
-function renderPhotos (array) {
-  array.forEach((photo) => {
+function renderPhotos (photos) {
+  photos.forEach((photo) => {
     const photoElement = template.cloneNode(true);
     photoElement.id = photo.id;
     photoElement.querySelector('.picture__img').src = photo.url;
@@ -20,7 +20,7 @@ function renderPhotos (array) {
   picturesBlock.appendChild(similarListFragment);
   const pictures = picturesBlock.querySelectorAll('a.picture');
 
-  photoListHandler(pictures, array);
+  photoListHandler(pictures, photos);
 }
 
 
