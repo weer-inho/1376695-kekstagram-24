@@ -1,4 +1,4 @@
-import {NAMES, COMMENTS, DESCRIPTIONS, SIZE} from './data.js';
+import {NAMES, COMMENTS, DESCRIPTIONS} from './data.js';
 
 function getRandomNumber(min, max)  {
   const lower = Math.ceil(Math.min(Math.abs(min), Math.abs(max)));
@@ -34,32 +34,12 @@ function generatePhoto (firstArgument, ix) {
   };
 }
 
-let photos = null;
-
-function createArrayOfPhotos() {
-  return Array(SIZE).fill(null).map(generatePhoto);
-}
-
-function getArrayOfPhotos () {
-  if (photos === null) {
-    photos = createArrayOfPhotos();
-    throw new Error('photos еще не инициализированы');
-  }
-
-  return photos;
-}
-
-function init(aPhotos) {
-  photos = aPhotos;
-}
-
 function isEscapeKey (evt) {
-  return evt.key === 'Escape';
-  // document.removeEventListener('keydown', isEscapeKey);
+  return evt.key === 'Escape' || evt.key === 'Esc';
 }
 
 function onEscKeyDown (evt, callback)  {
-  if (evt.key === 'Escape' || evt.key === 'Esc') {
+  if (isEscapeKey(evt)) {
     evt.preventDefault();
     document.removeEventListener('keydown', onEscKeyDown);
     callback();
@@ -70,15 +50,26 @@ function shuffleArray (array) {
   return array.sort(() => Math.random() - 0.5);
 }
 
+function checkForDuplicates(array) {
+  const valuesSoFar = [];
+  for (let i = 0; i < array.length; ++i) {
+    const value = array[i];
+    if (valuesSoFar.indexOf(value) !== -1) {
+      return false;
+    }
+    valuesSoFar.push(value);
+  }
+  return true;
+}
+
 export {
   getRandomNumber,
   getRandomArrayElement,
   generateComment,
   getArrayOfComments,
   generatePhoto,
-  getArrayOfPhotos,
   isEscapeKey,
   onEscKeyDown,
   shuffleArray,
-  init
+  checkForDuplicates
 };
