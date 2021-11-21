@@ -1,5 +1,5 @@
 import {isEscapeKey, onEscKeyDown} from './utils.js';
-import {checkLoadForm} from './hashtag-validation.js';
+import {checkLoadForm} from './form-validation.js';
 
 const SCALE_CHANGE_STEP = 25;
 const SCALE_MIN_VALUE = 25;
