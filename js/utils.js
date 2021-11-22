@@ -50,18 +50,6 @@ function shuffleArray (array) {
   return array.sort(() => Math.random() - 0.5);
 }
 
-function checkForDuplicates(array) {
-  const valuesSoFar = [];
-  for (let i = 0; i < array.length; ++i) {
-    const value = array[i];
-    if (valuesSoFar.indexOf(value) !== -1) {
-      return false;
-    }
-    valuesSoFar.push(value);
-  }
-  return true;
-}
-
 export {
   getRandomNumber,
   getRandomArrayElement,
@@ -70,6 +58,5 @@ export {
   generatePhoto,
   isEscapeKey,
   onEscKeyDown,
-  shuffleArray,
-  checkForDuplicates
+  shuffleArray
 };
