@@ -8,7 +8,7 @@ function onEscKeyDown (evt, callback)  {
     document.removeEventListener('keydown', onEscKeyDown);
     if (typeof callback === 'function') {
       callback();
-    };
+    }
   }
 }
 
