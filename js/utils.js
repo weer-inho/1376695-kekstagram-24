@@ -6,7 +6,9 @@ function onEscKeyDown (evt, callback)  {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     document.removeEventListener('keydown', onEscKeyDown);
-    callback();
+    if (typeof callback === 'function') {
+      callback();
+    };
   }
 }
 
