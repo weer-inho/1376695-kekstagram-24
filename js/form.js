@@ -106,7 +106,7 @@ function resetForm(){
   imgUploadForm.reset();
 }
 
-function onSuccess () {
+function showSuccessMessage () {
   const successTemplate = body.querySelector('#success');
   const successElement = successTemplate.content.querySelector('section.success').cloneNode(true);
   body.appendChild(successElement);
@@ -141,7 +141,7 @@ function onSuccess () {
   document.addEventListener('click', handleRemainingSuccessSpace);
 }
 
-function onFail () {
+function showFailMessage () {
   const failTemplate = body.querySelector('#error');
   const failElement = failTemplate.content.querySelector('section.error').cloneNode(true);
   body.appendChild(failElement);
@@ -203,7 +203,7 @@ function sendData(successFunction, failFunction) {
   });
 }
 
-sendData(onSuccess, onFail);
+sendData(showSuccessMessage, showFailMessage);
 
 scaleControlSmaller.addEventListener('click', scaleControlSmallerClickHandler);
 scaleControlBigger.addEventListener('click', scaleControlBiggerClickHandler);
