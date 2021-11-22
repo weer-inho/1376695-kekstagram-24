@@ -8,8 +8,6 @@ const closeButton = popup.querySelector('.big-picture__cancel');
 const socialComments = popup.querySelector('.social__comments');
 const commentTemplate = popup.querySelector('.social__comment').cloneNode(true);
 
-const commentsList =null;
-
 function photoListHandler (pictures, array) {
   pictures.forEach((picture) => {
     picture.addEventListener('click', (evt) => {
