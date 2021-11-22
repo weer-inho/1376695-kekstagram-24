@@ -48,10 +48,6 @@ function handleEscapeKeydown (evt) {
   });
 }
 
-loadForm.addEventListener('change',handleFileUploadChange);
-
-closeButton.addEventListener('click', () => closeModalForm());
-
 function setNewScale (scaleValue) {
   const newScale = scaleValue / SCALE_MAX_VALUE;
 
@@ -154,8 +150,9 @@ function handleFormSubmit (evt){
 }
 
 imgUploadForm.addEventListener('submit', handleFormSubmit);
-
 scaleControlSmaller.addEventListener('click', scaleControlSmallerClickHandler);
 scaleControlBigger.addEventListener('click', scaleControlBiggerClickHandler);
+loadForm.addEventListener('change',handleFileUploadChange);
+closeButton.addEventListener('click', () => closeModalForm());
 
 export {imgUploadOverlay, imgUploadPreview, effectsLevel};
