@@ -17,15 +17,14 @@ const scaleControlValue = imgUploadOverlay.querySelector('.scale__control--value
 const scaleControlSmaller = imgUploadOverlay.querySelector('.scale__control--smaller');
 const scaleControlBigger = imgUploadOverlay.querySelector('.scale__control--bigger');
 
-function escapeFromForm (evt) {
-  if (isEscapeKey(evt)) {
-    imgUploadOverlay.classList.add('hidden');
-    body.classList.remove('modal-open');
-    loadForm.value = '';
-  }
+function closeModalForm (){
+  imgUploadOverlay.classList.add('hidden');
+  body.classList.remove('modal-open');
+  loadForm.value = '';
+  document.removeEventListener('keydown', handleEscapeKeydown);
 }
 
-loadForm.addEventListener('change', () => {
+function handleFileUploadChange(){
   imgUploadOverlay.classList.remove('hidden');
   hashtagInput.value = '';
   commentInput.value = '';
@@ -36,30 +35,22 @@ loadForm.addEventListener('change', () => {
   body.classList.add('modal-open');
   checkLoadForm();
 
-  document.addEventListener('keydown', escapeFromForm);
-});
+  document.addEventListener('keydown', handleEscapeKeydown);
 
-hashtagInput.onfocus = function () {
-  document.removeEventListener('keydown', escapeFromForm);
-};
+}
 
-hashtagInput.onblur = function () {
-  document.addEventListener('keydown', escapeFromForm);
-};
+function handleEscapeKeydown (evt) {
+  onEscKeyDown(evt,()=>{
+    const element = evt.target;
+    if(!element.matches('.text__hashtags') && !element.matches('.text__description')){
+      closeModalForm();
+    }
+  });
+}
 
-commentInput.onfocus = function () {
-  document.removeEventListener('keydown', escapeFromForm);
-};
+loadForm.addEventListener('change',handleFileUploadChange);
 
-commentInput.onblur = function () {
-  document.addEventListener('keydown', escapeFromForm);
-};
-
-closeButton.addEventListener('click', () => {
-  imgUploadOverlay.classList.add('hidden');
-  body.classList.remove('modal-open');
-  loadForm.value = '';
-});
+closeButton.addEventListener('click', () => closeModalForm());
 
 function setNewScale (scaleValue) {
   const newScale = scaleValue / SCALE_MAX_VALUE;
@@ -111,14 +102,14 @@ function showSuccessMessage () {
   const successElement = successTemplate.content.querySelector('section.success').cloneNode(true);
   body.appendChild(successElement);
 
-  const successButton = successElement.querySelector('.success__button');
-  let handleMouse = null;
-  let handleEscape = null;
+  const button = successElement.querySelector('button');
+  let handleSuccessButtonClick = null;
+  let handleLocalEscapeKeydown = null;
   const closeSuccessMessage = () => {
     body.removeChild(successElement);
-    successButton.removeEventListener('click', handleMouse);
-    document.removeEventListener('keydown', handleEscape);
-    document.removeEventListener('keydown', handleRemainingSuccessSpace);
+    button.removeEventListener('click', handleSuccessButtonClick);
+    document.removeEventListener('keydown', handleLocalEscapeKeydown);
+    document.removeEventListener('click', handleRemainingSuccessSpace);
     resetForm();
   };
 
@@ -128,16 +119,16 @@ function showSuccessMessage () {
     }
   }
 
-  handleMouse = () => {
+  handleSuccessButtonClick = () => {
     closeSuccessMessage();
   };
 
-  handleEscape = (evt) => {
+  handleLocalEscapeKeydown = (evt) => {
     onEscKeyDown(evt, closeSuccessMessage);
   };
 
-  successButton.addEventListener('click', handleMouse);
-  document.addEventListener('keydown', handleEscape);
+  button.addEventListener('click', handleSuccessButtonClick);
+  document.addEventListener('keydown', handleLocalEscapeKeydown);
   document.addEventListener('click', handleRemainingSuccessSpace);
 }
 
@@ -148,12 +139,12 @@ function showFailMessage () {
 
   const failButton = failElement.querySelector('button');
 
-  let handleMouse = null;
-  let handleEscape = null;
+  let handleFailButtonClick = null;
+  let handleLocalEscapeKeydown = null;
   const closeFailMessage = () => {
     body.removeChild(failElement);
-    failButton.removeEventListener('click', handleMouse);
-    document.removeEventListener('keydown', handleEscape);
+    failButton.removeEventListener('click', handleFailButtonClick);
+    document.removeEventListener('keydown', handleLocalEscapeKeydown);
     document.removeEventListener('keydown', handleRemainingFailSpace);
     resetForm();
   };
@@ -164,16 +155,16 @@ function showFailMessage () {
     }
   }
 
-  handleMouse = () => {
+  handleFailButtonClick = () => {
     closeFailMessage();
   };
 
-  handleEscape = (evt) => {
+  handleLocalEscapeKeydown = (evt) => {
     onEscKeyDown(evt, closeFailMessage);
   };
 
-  failButton.addEventListener('click', handleMouse);
-  document.addEventListener('keydown', handleEscape);
+  failButton.addEventListener('click', handleFailButtonClick);
+  document.addEventListener('keydown', handleLocalEscapeKeydown);
   document.addEventListener('click', handleRemainingFailSpace);
 }
 
