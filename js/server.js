@@ -3,13 +3,20 @@ import {shuffleArray} from './utils.js';
 
 const imgFilterSection = document.querySelector('.img-filters');
 
+function showErrorLoadMessage () {
+  const errorLoadMessage = document.querySelector('section.error');
+  errorLoadMessage.classList.remove('hidden');
+  setTimeout(() => errorLoadMessage.classList.add('hidden'), 5000);
+}
+
 function renderServerPhotos() {
   fetch('https://24.javascript.pages.academy/kekstagram/data')
     .then((response) => response.json())
     .then((data) => {
       renderPhotos(data);
       imgFilterSection.classList.remove('img-filters--inactive');
-    });
+    })
+    .catch(showErrorLoadMessage);
 }
 
 function renderRandomServerPhotos() {
