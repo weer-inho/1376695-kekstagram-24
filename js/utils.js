@@ -46,8 +46,8 @@ function onEscKeyDown (evt, callback)  {
   }
 }
 
-function shuffleArray (array) {
-  return array.sort(() => Math.random() - 0.5);
+function shuffleArray (data) {
+  return data.sort(() => Math.random() - 0.5);
 }
 
 export {

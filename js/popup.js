@@ -93,7 +93,7 @@ function renderCommentSection(comments) {
   socialComments.appendChild(commentsList);
 }
 
-function findChosenPhoto (evt, array) {
+function findChosenPhoto (evt, photos) {
   const target = evt.target;
   const isTargetCorrect = target.classList.contains('picture__img');
 
@@ -102,7 +102,7 @@ function findChosenPhoto (evt, array) {
   }
 
   const photoId = target.closest('.picture').id;
-  const currentPhoto = array.find((element) => Number(element.id) === Number(photoId));
+  const currentPhoto = photos.find((element) => Number(element.id) === Number(photoId));
 
   renderPopup(currentPhoto);
 }
