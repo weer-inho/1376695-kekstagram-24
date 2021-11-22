@@ -1,4 +1,4 @@
-import {isEscapeKey, onEscKeyDown} from './utils.js';
+import {onEscKeyDown} from './utils.js';
 import {checkLoadForm} from './form-validation.js';
 
 const SCALE_CHANGE_STEP = 25;
@@ -17,15 +17,14 @@ const scaleControlValue = imgUploadOverlay.querySelector('.scale__control--value
 const scaleControlSmaller = imgUploadOverlay.querySelector('.scale__control--smaller');
 const scaleControlBigger = imgUploadOverlay.querySelector('.scale__control--bigger');
 
-function escapeFromForm (evt) {
-  if (isEscapeKey(evt)) {
-    imgUploadOverlay.classList.add('hidden');
-    body.classList.remove('modal-open');
-    loadForm.value = '';
-  }
+function closeModalForm (){
+  imgUploadOverlay.classList.add('hidden');
+  body.classList.remove('modal-open');
+  loadForm.value = '';
+  document.removeEventListener('keydown', handleEscapeKeydown);
 }
 
-loadForm.addEventListener('change', () => {
+function handleFileUploadChange(){
   imgUploadOverlay.classList.remove('hidden');
   hashtagInput.value = '';
   commentInput.value = '';
@@ -36,30 +35,18 @@ loadForm.addEventListener('change', () => {
   body.classList.add('modal-open');
   checkLoadForm();
 
-  document.addEventListener('keydown', escapeFromForm);
-});
+  document.addEventListener('keydown', handleEscapeKeydown);
 
-hashtagInput.onfocus = function () {
-  document.removeEventListener('keydown', escapeFromForm);
-};
+}
 
-hashtagInput.onblur = function () {
-  document.addEventListener('keydown', escapeFromForm);
-};
-
-commentInput.onfocus = function () {
-  document.removeEventListener('keydown', escapeFromForm);
-};
-
-commentInput.onblur = function () {
-  document.addEventListener('keydown', escapeFromForm);
-};
-
-closeButton.addEventListener('click', () => {
-  imgUploadOverlay.classList.add('hidden');
-  body.classList.remove('modal-open');
-  loadForm.value = '';
-});
+function handleEscapeKeydown (evt) {
+  onEscKeyDown(evt,()=>{
+    const element = evt.target;
+    if(!element.matches('.text__hashtags') && !element.matches('.text__description')){
+      closeModalForm();
+    }
+  });
+}
 
 function setNewScale (scaleValue) {
   const newScale = scaleValue / SCALE_MAX_VALUE;
@@ -106,106 +93,66 @@ function resetForm(){
   imgUploadForm.reset();
 }
 
-function showSuccessMessage () {
-  const successTemplate = body.querySelector('#success');
-  const successElement = successTemplate.content.querySelector('section.success').cloneNode(true);
-  body.appendChild(successElement);
+function cloneMessage(name){
+  return document.querySelector(name).content.firstElementChild.cloneNode(true);
+}
 
-  const successButton = successElement.querySelector('.success__button');
-  let handleMouse = null;
-  let handleEscape = null;
-  const closeSuccessMessage = () => {
-    body.removeChild(successElement);
-    successButton.removeEventListener('click', handleMouse);
-    document.removeEventListener('keydown', handleEscape);
-    document.removeEventListener('keydown', handleRemainingSuccessSpace);
+function manageMessage(cloned){
+  closeModalForm();
+  body.appendChild(cloned);
+
+  function closeMessage () {
+    body.removeChild(cloned);
+    document.removeEventListener('keydown', handleLocalEscapeKeydown);
+    document.removeEventListener('click', handleAnyMouseClick);
     resetForm();
-  };
-
-  function handleRemainingSuccessSpace (evt) {
-    if (evt.target === successElement) {
-      closeSuccessMessage();
-    }
   }
 
-  handleMouse = () => {
-    closeSuccessMessage();
-  };
+  function handleAnyMouseClick () {
+    closeMessage();
+  }
 
-  handleEscape = (evt) => {
-    onEscKeyDown(evt, closeSuccessMessage);
-  };
+  function handleLocalEscapeKeydown (evt) {
+    onEscKeyDown(evt, closeMessage);
+  }
 
-  successButton.addEventListener('click', handleMouse);
-  document.addEventListener('keydown', handleEscape);
-  document.addEventListener('click', handleRemainingSuccessSpace);
+  document.addEventListener('keydown', handleLocalEscapeKeydown);
+  document.addEventListener('click', handleAnyMouseClick);
+}
+
+function showSuccessMessage () {
+  manageMessage(cloneMessage('#success'));
 }
 
 function showFailMessage () {
-  const failTemplate = body.querySelector('#error');
-  const failElement = failTemplate.content.querySelector('section.error').cloneNode(true);
-  body.appendChild(failElement);
-
-  const failButton = failElement.querySelector('button');
-
-  let handleMouse = null;
-  let handleEscape = null;
-  const closeFailMessage = () => {
-    body.removeChild(failElement);
-    failButton.removeEventListener('click', handleMouse);
-    document.removeEventListener('keydown', handleEscape);
-    document.removeEventListener('keydown', handleRemainingFailSpace);
-    resetForm();
-  };
-
-  function handleRemainingFailSpace (evt) {
-    if (evt.target === failElement) {
-      closeFailMessage();
-    }
-  }
-
-  handleMouse = () => {
-    closeFailMessage();
-  };
-
-  handleEscape = (evt) => {
-    onEscKeyDown(evt, closeFailMessage);
-  };
-
-  failButton.addEventListener('click', handleMouse);
-  document.addEventListener('keydown', handleEscape);
-  document.addEventListener('click', handleRemainingFailSpace);
+  manageMessage(cloneMessage('#error'));
 }
 
+function handleFormSubmit (evt){
+  evt.preventDefault();
 
-function sendData(successFunction, failFunction) {
-  imgUploadForm.addEventListener('submit', (evt) => {
-    evt.preventDefault();
+  const formData = new FormData(evt.target);
 
-    const formData = new FormData(evt.target);
-
-    fetch(
-      'https://24.javascript.pages.academy/kekstagram',
-      {
-        method: 'POST',
-        body: formData,
-      },
-    )
-      .then((response) => {
-        if (response.ok) {
-          successFunction();
-        } else {
-          failFunction();
-        }
-      })
-      .catch(failFunction);
-    imgUploadOverlay.classList.add('hidden');
-  });
+  fetch(
+    'https://24.javascript.pages.academy/kekstagram',
+    {
+      method: 'POST',
+      body: formData,
+    },
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error();
+      }
+      showSuccessMessage();
+    })
+    .catch(showFailMessage);
 }
 
-sendData(showSuccessMessage, showFailMessage);
-
+imgUploadForm.addEventListener('submit', handleFormSubmit);
 scaleControlSmaller.addEventListener('click', scaleControlSmallerClickHandler);
 scaleControlBigger.addEventListener('click', scaleControlBiggerClickHandler);
+loadForm.addEventListener('change',handleFileUploadChange);
+closeButton.addEventListener('click', () => closeModalForm());
 
 export {imgUploadOverlay, imgUploadPreview, effectsLevel};
