@@ -1,4 +1,4 @@
-import {isEscapeKey, onEscKeyDown} from './utils.js';
+import {onEscKeyDown} from './utils.js';
 import {checkLoadForm} from './form-validation.js';
 
 const SCALE_CHANGE_STEP = 25;
@@ -97,104 +97,63 @@ function resetForm(){
   imgUploadForm.reset();
 }
 
-function showSuccessMessage () {
-  const successTemplate = body.querySelector('#success');
-  const successElement = successTemplate.content.querySelector('section.success').cloneNode(true);
-  body.appendChild(successElement);
+function cloneMessage(name){
+  return document.querySelector(name).content.firstElementChild.cloneNode(true);
+}
 
-  const button = successElement.querySelector('button');
-  let handleSuccessButtonClick = null;
-  let handleLocalEscapeKeydown = null;
-  const closeSuccessMessage = () => {
-    body.removeChild(successElement);
-    button.removeEventListener('click', handleSuccessButtonClick);
+function manageMessage(cloned){
+  closeModalForm();
+  body.appendChild(cloned);
+
+  function closeMessage () {
+    body.removeChild(cloned);
     document.removeEventListener('keydown', handleLocalEscapeKeydown);
-    document.removeEventListener('click', handleRemainingSuccessSpace);
+    document.removeEventListener('click', handleAnyMouseClick);
     resetForm();
-  };
-
-  function handleRemainingSuccessSpace (evt) {
-    if (evt.target === successElement) {
-      closeSuccessMessage();
-    }
   }
 
-  handleSuccessButtonClick = () => {
-    closeSuccessMessage();
-  };
+  function handleAnyMouseClick () {
+    closeMessage();
+  }
 
-  handleLocalEscapeKeydown = (evt) => {
-    onEscKeyDown(evt, closeSuccessMessage);
-  };
+  function handleLocalEscapeKeydown (evt) {
+    onEscKeyDown(evt, closeMessage);
+  }
 
-  button.addEventListener('click', handleSuccessButtonClick);
   document.addEventListener('keydown', handleLocalEscapeKeydown);
-  document.addEventListener('click', handleRemainingSuccessSpace);
+  document.addEventListener('click', handleAnyMouseClick);
+}
+
+function showSuccessMessage () {
+  manageMessage(cloneMessage('#success'));
 }
 
 function showFailMessage () {
-  const failTemplate = body.querySelector('#error');
-  const failElement = failTemplate.content.querySelector('section.error').cloneNode(true);
-  body.appendChild(failElement);
-
-  const failButton = failElement.querySelector('button');
-
-  let handleFailButtonClick = null;
-  let handleLocalEscapeKeydown = null;
-  const closeFailMessage = () => {
-    body.removeChild(failElement);
-    failButton.removeEventListener('click', handleFailButtonClick);
-    document.removeEventListener('keydown', handleLocalEscapeKeydown);
-    document.removeEventListener('keydown', handleRemainingFailSpace);
-    resetForm();
-  };
-
-  function handleRemainingFailSpace (evt) {
-    if (evt.target === failElement) {
-      closeFailMessage();
-    }
-  }
-
-  handleFailButtonClick = () => {
-    closeFailMessage();
-  };
-
-  handleLocalEscapeKeydown = (evt) => {
-    onEscKeyDown(evt, closeFailMessage);
-  };
-
-  failButton.addEventListener('click', handleFailButtonClick);
-  document.addEventListener('keydown', handleLocalEscapeKeydown);
-  document.addEventListener('click', handleRemainingFailSpace);
+  manageMessage(cloneMessage('#error'));
 }
 
+function handleFormSubmit (evt){
+  evt.preventDefault();
 
-function sendData(successFunction, failFunction) {
-  imgUploadForm.addEventListener('submit', (evt) => {
-    evt.preventDefault();
+  const formData = new FormData(evt.target);
 
-    const formData = new FormData(evt.target);
-
-    fetch(
-      'https://24.javascript.pages.academy/kekstagram',
-      {
-        method: 'POST',
-        body: formData,
-      },
-    )
-      .then((response) => {
-        if (response.ok) {
-          successFunction();
-        } else {
-          failFunction();
-        }
-      })
-      .catch(failFunction);
-    imgUploadOverlay.classList.add('hidden');
-  });
+  fetch(
+    'https://24.javascript.pages.academy/kekstagram',
+    {
+      method: 'POST',
+      body: formData,
+    },
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error();
+      }
+      showSuccessMessage();
+    })
+    .catch(showFailMessage);
 }
 
-sendData(showSuccessMessage, showFailMessage);
+imgUploadForm.addEventListener('submit', handleFormSubmit);
 
 scaleControlSmaller.addEventListener('click', scaleControlSmallerClickHandler);
 scaleControlBigger.addEventListener('click', scaleControlBiggerClickHandler);
