@@ -4,8 +4,8 @@ const uploadForm = document.querySelector('.img-upload__form');
 const hashTagInput = uploadForm.querySelector('.text__hashtags');
 const submitButton = uploadForm.querySelector('.img-upload__submit');
 
-const getArrayWithoutVoids = (array) =>
-  array.reduce((accumulator, value) => value === '' ? accumulator : [...accumulator, value], []);
+const getArrayWithoutVoids = (data) =>
+  data.reduce((accumulator, value) => value === '' ? accumulator : [...accumulator, value], []);
 
 const checkForAnError = (testedHashtag) => objectForChecking.find(({checkValue}) => checkValue(testedHashtag));
 

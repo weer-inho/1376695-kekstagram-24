@@ -14,22 +14,22 @@ noUiSlider.create(sliderElement, {
   connect: 'lower',
 });
 
-sliderElement.noUiSlider.on('update', (...rest) => {
+sliderElement.noUiSlider.on('update', (...values) => {
   switch (imgUploadPreview.classList[0]) {
     case 'effects__preview--chrome':
-      imgUploadPreview.style.filter = `grayscale(${rest[0]})`;
+      imgUploadPreview.style.filter = `grayscale(${values[0]})`;
       break;
     case 'effects__preview--sepia':
-      imgUploadPreview.style.filter = `sepia(${rest[0]}%)`;
+      imgUploadPreview.style.filter = `sepia(${values[0]}%)`;
       break;
     case 'effects__preview--marvin':
-      imgUploadPreview.style.filter = `invert(${rest[0]}%)`;
+      imgUploadPreview.style.filter = `invert(${values[0]}%)`;
       break;
     case 'effects__preview--phobos':
-      imgUploadPreview.style.filter = `blur(${rest[0]}px)`;
+      imgUploadPreview.style.filter = `blur(${values[0]}px)`;
       break;
     case 'effects__preview--heat':
-      imgUploadPreview.style.filter = `brightness(${rest[0]})`;
+      imgUploadPreview.style.filter = `brightness(${values[0]})`;
       break;
     default:
   }

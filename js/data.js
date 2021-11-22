@@ -1,46 +1,9 @@
-const SIZE = 25;
-
-const DESCRIPTIONS = [
-  'Интересная фотография',
-  'Нужно рассматривать изображение внимательно',
-  'Школьный стадион',
-  'Спортивная площадка',
-  'Картинная галлерея',
-  'Кабинет',
-  'Зал музея',
-];
-
-const NAMES = [
-  'Анна',
-  'Алексей',
-  'Екатерина',
-  'Глеб',
-  'Злата',
-  'Денис',
-  'Мария',
-  'Иван',
-  'Есения',
-  'Платон',
-];
-
-const COMMENTS = [
-  'Ожидала большего',
-  'Смотрю по старой памяти',
-  'Хороший состав и действие',
-  'Как было до и после',
-  'Холодновато',
-  'Шикарная новинка',
-  'Необычно',
-  'Категорически не понравилось',
-  'Хорошо',
-  'Великолепно',
-];
-
 const Hashtag = {
   GRID: '#',
   MIN_SIZE: 2,
   MAX_SIZE: 20,
   AMOUNT: 5,
+  REGULAR_EXPRESSION: new RegExp(/^#[A-Za-zА-Яа-яЁё0-9]{1,19}$/),
 };
 
 const objectForChecking = [
@@ -66,7 +29,11 @@ const objectForChecking = [
   },
   {
     customValidity: 'Один и тот же хештег не может быть использован дважды',
-    checkValue: (testedHashtag) => testedHashtag.some((value, index, arr) => arr.indexOf(value) !== index),
+    checkValue: (testedHashtag) => testedHashtag.some((value, index, hashtags) => hashtags.indexOf(value) !== index),
+  },
+  {
+    customValidity: 'Cтрока после решётки должна состоять из букв и чисел и не может содержать пробелы, спецсимволы (#, @, $ и т. п.), символы пунктуации (тире, дефис, запятая и т. п.), эмодзи и т. д.',
+    checkValue: (testedHashtag) => testedHashtag.some((value) => !Hashtag.REGULAR_EXPRESSION.test(value)),
   },
   {
     customValidity: false,
@@ -74,4 +41,4 @@ const objectForChecking = [
   },
 ];
 
-export {SIZE, NAMES, COMMENTS, DESCRIPTIONS, Hashtag, objectForChecking};
+export {Hashtag, objectForChecking};

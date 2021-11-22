@@ -66,7 +66,7 @@ function renderCommentSection(comments) {
     const currentComments = comments.slice(0, currentCommentCount);
     renderCommentsArray(currentComments);
 
-    commentsLoader.addEventListener('click', () => {
+    const calculateRenderedComments = () =>  {
       const nextCommentCount = 5 + currentCommentCount;
       const nextComments = comments.slice(currentCommentCount, nextCommentCount);
       currentCommentCount = nextCommentCount;
@@ -77,8 +77,12 @@ function renderCommentSection(comments) {
       if (comments.length <= currentCommentCount) {
         commentsLoader.classList.add('hidden');
         currentCommentCountElement.textContent = comments.length;
+        commentsLoader.removeEventListener('click', calculateRenderedComments);
       }
-    });
+    };
+
+    commentsLoader.addEventListener('click', calculateRenderedComments);
+
   } else {
     socialCommentCount.classList.add('hidden');
     commentsLoader.classList.add('hidden');
@@ -89,7 +93,7 @@ function renderCommentSection(comments) {
   socialComments.appendChild(commentsList);
 }
 
-function findChosenPhoto (evt, array) {
+function findChosenPhoto (evt, photos) {
   const target = evt.target;
   const isTargetCorrect = target.classList.contains('picture__img');
 
@@ -98,7 +102,7 @@ function findChosenPhoto (evt, array) {
   }
 
   const photoId = target.closest('.picture').id;
-  const currentPhoto = array.find((element) => Number(element.id) === Number(photoId));
+  const currentPhoto = photos.find((element) => Number(element.id) === Number(photoId));
 
   renderPopup(currentPhoto);
 }
